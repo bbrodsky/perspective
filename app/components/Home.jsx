@@ -16,7 +16,7 @@ class Home extends Component {
         <h2>Template Ready.</h2>
         <p>Add new pages using react-router, change the Redux state, and make this app your own!</p>
         <p>CURRENT STATE: TBD</p>
-        <button onClick={() => firebase.database().ref("User").set("Comment")}>Update</button>
+        <button onClick={() => firebase.database().ref("User").set("Comment")}>Comment</button>
       </div>
     )
   }

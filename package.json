@@ -1,22 +1,22 @@
 {
-  "name": "react-template",
-  "version": "1.0.0",
-  "description": "Sets up a Node server, React, Redux, and a Router",
-  "main": "webpack.config.js",
+  "name": "perspective",
+  "version": "0.0.1",
+  "description": "",
+  "main": "server/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack -w & nodemon server.js"
+    "start": "node server/server.js",
+    "dev": "nodemon --watch server -e js server/app.js",
+    "build": "webpack",
+    "build-dev": "webpack --progress --colors",
+    "build-watch": "webpack -w --progress --colors"
   },
-  "author": "shane",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
-    "babel": "^6.5.2",
-    "babel-core": "^6.17.0",
-    "babel-loader": "^6.2.5",
-    "babel-preset-es2015": "^6.16.0",
-    "babel-preset-react": "^6.16.0",
+    "axios": "^0.15.3",
+    "body-parser": "^1.15.2",
     "express": "^4.14.0",
-    "nodemon": "^1.11.0",
+    "morgan": "^1.7.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-redux": "^4.4.5",
@@ -24,7 +24,18 @@
     "redux": "^3.6.0",
     "redux-logger": "^2.7.0",
     "redux-thunk": "^2.1.0",
-    "volleyball": "^1.3.0",
+    "socket.io": "^1.7.2",
+    "twilio": "^2.11.1",
+    "twilio-video": "^1.0.0-beta3"
+  },
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-core": "^6.17.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-react": "^6.16.0",
+    "dotenv": "^4.0.0",
+    "nodemon": "^1.11.0",
     "webpack": "^1.13.2"
   }
 }

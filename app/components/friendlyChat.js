@@ -17,9 +17,11 @@
 
 // Initializes FriendlyChat.
 export function FriendlyChat() {
-  this.checkSetup();
+  // this.checkSetup();
 
   // Shortcuts to DOM Elements.
+  this.messageContainer = document.getElementById('messages-card-container');
+  this.messageCard = document.getElementById('messages-card');
   this.messageList = document.getElementById('messages');
   this.messageForm = document.getElementById('message-form');
   this.messageInput = document.getElementById('message');
@@ -74,8 +76,8 @@ FriendlyChat.prototype.loadMessages = function() {
     var val = data.val();
     this.displayMessage(data.key, val.name, val.text, val.photoUrl, val.imageUrl);
   }.bind(this);
-  this.messagesRef.limitToLast(12).on('child_added', setMessage);
-  this.messagesRef.limitToLast(12).on('child_changed', setMessage);
+  this.messagesRef.limitToLast(6).on('child_added', setMessage);
+  this.messagesRef.limitToLast(6).on('child_changed', setMessage);
 };
 
 // Saves a new message on the Firebase DB.
@@ -234,6 +236,7 @@ FriendlyChat.LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif';
 
 // Displays a Message in the UI.
 FriendlyChat.prototype.displayMessage = function(key, name, text, picUrl, imageUri) {
+  // console.log("messages", arguments)
   var div = document.getElementById(key);
   // If an element for that message does not exists yet we create it.
   if (!div) {
@@ -241,7 +244,10 @@ FriendlyChat.prototype.displayMessage = function(key, name, text, picUrl, imageU
     container.innerHTML = FriendlyChat.MESSAGE_TEMPLATE;
     div = container.firstChild;
     div.setAttribute('id', key);
-    this.messageList.appendChild(div);
+    // styling for comments
+    div.className += " mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--4-col-tablet mdl-cell--4-col-desktop";
+    div.firstChild.className += " mdl-card__supporting-text mdl-color-text--grey-600"
+    this.messageContainer.appendChild(div);
   }
   if (picUrl) {
     div.querySelector('.pic').style.backgroundImage = 'url(' + picUrl + ')';
@@ -292,6 +298,6 @@ FriendlyChat.prototype.checkSetup = function() {
   }
 };
 
-window.onload = function() {
-  window.friendlyChat = new FriendlyChat();
-};
+// window.onload = function() {
+//   window.friendlyChat = new FriendlyChat();
+// };

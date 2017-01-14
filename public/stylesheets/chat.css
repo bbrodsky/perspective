@@ -1,0 +1,42 @@
+.messages-card {
+  min-height: 0px;
+}
+
+.messages {
+  font-size: 18px;
+  color: black;
+  padding: 5px;
+  /*text-align: center;*/
+}
+
+#messages-form {
+  min-height: 0px;
+}
+
+/*comment input form*/
+.mdl-textfield {
+  display: inline-block;
+  width: 100%;
+}
+
+#message-form {
+}
+
+#message-form input {
+  text-align: center;
+}
+
+#mediaCapture {
+  float: right;
+  /*position: relative;
+  left: -50%;
+  text-align: center;*/
+}
+
+.submit-button {
+  float: left;
+}
+
+/*.picture-button {
+  float: right;
+}*/

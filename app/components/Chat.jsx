@@ -8,14 +8,11 @@ class Chat extends Component {
     super(props);
   }
 
-  componentDidUpdate(){
-  }
-
   render() {
-    const { messages } = this.props;
+    const { messages, firebase } = this.props;
     var commentArray = Object.keys(messages).map(function (key) { return messages[key]; });
-    commentArray = commentArray.slice(commentArray.length-6);
-    console.log("M", commentArray)
+    commentArray = commentArray.slice(commentArray.length-8);
+    console.log("M", commentArray, firebase)
 
     return (
     <div>
@@ -24,15 +21,13 @@ class Chat extends Component {
         <main className="mdl-layout__content mdl-color--grey-100">
           <div id="messages-card-container" className="mdl-cell mdl-cell--12-col mdl-grid">
 
-          <CommentForm />
+          {firebase ? <CommentForm firebase={firebase}/> : null}
 
           {commentArray.length && commentArray.map((comment, index) => {
             return (
               <Comment key={index} messageText={comment.text} userName={comment.name}/>
             )
           })}
-
-          {/* <div className="mdl-card__supporting-text mdl-color-text--grey-600"> */}
 
             <div id="must-signin-snackbar" className="mdl-js-snackbar mdl-snackbar">
               <div className="mdl-snackbar__text"></div>

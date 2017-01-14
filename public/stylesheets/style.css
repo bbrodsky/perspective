@@ -1,0 +1,16 @@
+.swag {
+  height: 50px;
+  width: 50px;
+}
+
+#navbar {
+  background-color: #415AE0;
+  height: 75px;
+  width: 100%;
+}
+
+#navbar p {
+  font-size: 2.0em;
+  display: inline;
+}
+

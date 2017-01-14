@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
-
-/* The 'App' contains everything. Any component you add here will always be
-visible. Could be a good place for the Navbar if you want to add one. */
+import Navbar from './Navbar'
 
 const App = props => {
   const { children } = props;
 
   return (
     <div>
+      <Navbar/>
       { children }
     </div>
   )
 }
 
 export default App;
-

@@ -5,7 +5,7 @@ import firebase from 'firebase'
 import App from './components/App'
 import Home from './components/Home'
 
-import setFirebase from './reducers/firebase'
+import {setFirebase} from './reducers/firebase'
 import store from './store'
 
 var config = {
@@ -17,14 +17,14 @@ var config = {
 };
 
 firebase.initializeApp(config);
-const onAppEnter = () => store.dispatch(setFirebase(firebase))
+store.dispatch(setFirebase(firebase))
 
 
 export default () => (
   <Router history={browserHistory}>
-    <Route path="/" component={App} >
+    <Route path="/" component={App}>
       <IndexRedirect to="/home" />
-      <Route path="/home" component={Home} onEnter={onAppEnter} />
+      <Route path="/home" component={Home} />
     </Route>
   </Router>
 );

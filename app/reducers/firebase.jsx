@@ -1,7 +1,7 @@
 /* -----------------    ACTIONS     ------------------ */
 const SET_FIREBASE = 'SET_FIREBASE'
 /* ------------   ACTION CREATORS     ------------------ */
-export const setFirebase = firebase => ({
+export const setFirebase = (firebase) => ({
   type: SET_FIREBASE,
   firebase
 })

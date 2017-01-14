@@ -14,3 +14,10 @@
   display: inline;
 }
 
+.vbox {
+  background-color: black;
+  height: 200px;
+  width: 350px;
+  margin: auto
+  margin-top: 30px;
+}

@@ -1,13 +1,11 @@
-'use strict';
-
 const express = require('express');
-const volleyball = require('volleyball');
+const morgan = require('morgan');
 const { resolve } = require('path');
 
 const app = express();
 
 // logging middleware
-app.use(volleyball);
+app.use(morgan('dev'));
 
 // serve static files from public
 app.use('/public', express.static('public'));

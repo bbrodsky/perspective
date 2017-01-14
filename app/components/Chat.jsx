@@ -2,21 +2,20 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import CommentForm from './CommentForm.jsx';
 import Comment from './Comment.jsx';
-// import {FriendlyChat} from './friendlyChat'
-
 
 class Chat extends Component {
   constructor(props) {
     super(props);
   }
 
-  componentDidMount(){
+  componentDidUpdate(){
   }
 
   render() {
-    const { firebase } = this.props
-        // console.log(window.firebase, "//", window)
-    window.firebase = firebase;
+    const { messages } = this.props;
+    var commentArray = Object.keys(messages).map(function (key) { return messages[key]; });
+    commentArray = commentArray.slice(commentArray.length-6);
+    console.log("M", commentArray)
 
     return (
     <div>
@@ -27,7 +26,11 @@ class Chat extends Component {
 
           <CommentForm />
 
-          <Comment />
+          {commentArray.length && commentArray.map((comment, index) => {
+            return (
+              <Comment key={index} messageText={comment.text} userName={comment.name}/>
+            )
+          })}
 
           {/* <div className="mdl-card__supporting-text mdl-color-text--grey-600"> */}
 
@@ -38,13 +41,13 @@ class Chat extends Component {
 
           </div>
         </main>
- </div>
-</div>
+      </div>
+    </div>
     )
   }
 }
 
-const mapStateToProps = ({ firebase }) => ({ firebase })
+const mapStateToProps = ({ firebase, messages }) => ({ firebase, messages })
 
 
 

@@ -19,7 +19,6 @@ export const onAppEnter = () => {
   store.dispatch(setFirebase(firebase))
 
   firebase.database().ref('messages').on('value', snapshot => {
-    console.log('working')
     if(!snapshot) return;
     store.dispatch(setMessages(snapshot.val()));
   })

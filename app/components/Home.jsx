@@ -9,20 +9,23 @@ class Home extends Component {
   }
 
   render() {
-    const { firebase } = this.props
+    const { user } = this.props
 
     return (
-      <div>
-        <h2>Template Ready.</h2>
-        <p>Add new pages using react-router, change the Redux state, and make this app your own!</p>
-        <p>CURRENT STATE: TBD</p>
-        <button onClick={() => firebase.database().ref("User").set("Comment")}>Comment</button>
-      </div>
+    <div>
+    {user && user.displayName ?
+    <div>
+      <p>you are logged in as: {user.displayName}</p>
+      <img className="swag" src={user.photoURL} />
+    </div>
+    :
+    <p>You are not logged in</p>}
+    </div>
     )
   }
 }
 
-const mapStateToProps = ({ firebase }) => ({ firebase })
+const mapStateToProps = ({ user }) => ({ user })
 
 
 

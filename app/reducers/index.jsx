@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import example from './example'
+import firebase from './firebase'
 
 const rootReducer = combineReducers({
-  example
+  firebase
 });
 
 export default rootReducer;

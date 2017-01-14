@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-
-
 class Navbar extends Component {
   constructor(props) {
     super(props);
@@ -34,12 +32,13 @@ class Navbar extends Component {
     const { firebase, user } = this.props
 
     return (
-      <div>
+      <div id="navbar">
         <h1>NAVBAR BOSS</h1>
         {user.displayName ?
           <div>
             <p>you are logged in as: {user.displayName}</p>
             <button onClick={this.signOut}>log out bro</button>
+            <img className="swag" src={user.photoURL} />
           </div>
           :
           <button onClick={this.signInGoog}>log in bro</button>}

@@ -16,7 +16,7 @@ export default class Comment extends Component {
     const { messageText, userName } = this.props;
 
     return (
-      <div className="messages-card mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--6-col-tablet mdl-cell--6-col-desktop">
+      <div className="messages-card mdl-card mdl-shadow--2dp col-md-4">
         <div className="mdl-card__supporting-text">
           <div className="userName">
             { userName }:

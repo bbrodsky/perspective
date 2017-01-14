@@ -15,27 +15,18 @@ class Chat extends Component {
     console.log("M", commentArray, firebase)
 
     return (
-    <div>
-      <div className="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
-
-        <main className="mdl-layout__content mdl-color--grey-100">
-          <div id="messages-card-container" className="mdl-cell mdl-cell--12-col mdl-grid">
-
+    <div className="row">
+      <div className="col-sm-12">
+        <div className="row">
           {firebase ? <CommentForm firebase={firebase}/> : null}
-
+        </div>
+        <div className="row">
           {commentArray.length && commentArray.map((comment, index) => {
             return (
               <Comment key={index} messageText={comment.text} userName={comment.name}/>
             )
           })}
-
-            <div id="must-signin-snackbar" className="mdl-js-snackbar mdl-snackbar">
-              <div className="mdl-snackbar__text"></div>
-              <button className="mdl-snackbar__action" type="button"></button>
-            </div>
-
           </div>
-        </main>
       </div>
     </div>
     )

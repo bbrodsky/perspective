@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Chat from './Chat'
 
 
 
@@ -33,14 +34,9 @@ class Home extends Component {
         :
         <p>You are not logged in</p>}
       <div className="row">
-        <h1> video section</h1>
-      </div>
-      <div className="row">
         <h1> flying links section</h1>
       </div>
-      <div className="row">
-        <h1> comments section</h1>
-      </div>
+      <Chat />
     </div>
 
     )

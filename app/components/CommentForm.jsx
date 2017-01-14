@@ -20,24 +20,34 @@ export default class CommentForm extends Component {
       text: event.target.message.value,
       photoUrl: auth.currentUser.photoURL
     })
+    event.target.message.value = '';
   }
 
   render() {
     return (
-      <div id="messages-form" className="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--6-col-tablet mdl-cell--12-col-desktop">
+      <div id="messages-form" className="col-md-12 mdl-card mdl-shadow--2dp">
         <div className="mdl-card__supporting-text mdl-color-text--grey-600">
           <form id="message-form" action="#" onSubmit={(e) => this.submitComment(e)}>
-            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-              <input className="mdl-textfield__input" type="text" id="message" />
-              <label className="mdl-textfield__label" htmlFor="message">Message...</label>
+            <div className="row">
+              <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label
+                col-md-12">
+                <input className="mdl-textfield__input" type="text" id="message" />
+                <label className="mdl-textfield__label" htmlFor="message">Message...</label>
+              </div>
             </div>
-            <button id="submit" form="message-form" className="mdl-button submit-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-              Send
-            </button>
+            <div className="row">
+            <div className="col-md-6">
+              <button id="submit" form="message-form" className="mdl-button submit-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                Send
+              </button>
+            </div>
+            {/*<div className="col-md-6">
             <input id="mediaCapture" type="file" accept="image/*,capture=camera" />
-            {/* <button id="submitImage" title="Add an image" className="mdl-button picture-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--amber-400 mdl-color-text--white">
+             <button id="submitImage" title="Add an image" className="mdl-button picture-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--amber-400 mdl-color-text--white">
               <i className="material-icons">image</i>
-            </button> */}
+            </button>
+            </div>*/}
+            </div>
           </form>
           <form id="image-form" action="#">
           </form>

@@ -4,7 +4,6 @@ import { Router, Route, browserHistory, IndexRedirect } from 'react-router';
 
 import App from './components/App'
 import Home from './components/Home'
-import Chat from './components/Chat'
 
 import {setFirebase} from './reducers/firebase'
 import store from './store'
@@ -16,7 +15,6 @@ export default () => (
     <Route path="/" component={App} onEnter={onAppEnter}>
       <IndexRedirect to="/home" />
       <Route path="/home" component={Home} />
-      <Route path="/chat" component={Chat} />
     </Route>
   </Router>
 );

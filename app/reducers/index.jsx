@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
 import firebase from './firebase'
+import user from './user'
 
 const rootReducer = combineReducers({
-  firebase
+  firebase,
+  user
 });
 
 export default rootReducer;

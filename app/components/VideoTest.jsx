@@ -1,88 +1,130 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import axios from 'axios';
 import TwilioVideo from '../../node_modules/twilio-video/dist/twilio-video.min.js';
 
-export default class Home extends Component {
+class Home extends Component {
   constructor(props) {
     super(props);
-    this.room = '123';
+    this.roomName = props.params.splat;
+    this.room;
     this.state = {
-      identity: '',
-      activeRoom: '',
+      participantOne: '',
+      participantTwo: '',
+      mod: '',
+      viewers: [],
+      isAdmin: false,
       error: ''
-    }
+    };
+    this.updateDiscussion = this.updateDiscussion.bind(this);
   }
 
   componentDidMount() {
     // Check for WebRTC on browser
     if (!navigator.webkitGetUserMedia && !navigator.mozGetUserMedia) {
-      this.setState({ error: 'Your browser does not support live video' });
+      return this.setState({ error: 'Your browser does not support live video' });
     }
+    // Admins WhiteList
+    this.props.firebase.database().ref('admin').once('value', snapshot => {
+      // check if user is administrator
+      const admins = snapshot && snapshot.val();
+      const isAdmin = admins[this.props.user.uid] ? true : false
 
-    // Get Twilio token
-    axios.get('/api/twilio/token')
+      if (isAdmin) {
+        this.setState({ isAdmin: true })
+      }
+      // Get Twilio token
+      axios.get(`/api/twilio/token?userid=${this.props.user.uid}`)
       .then(({ data }) => {
-        const identity = data.identity;
-
         // Connect user video to Twilio
         const videoClient = new TwilioVideo.Client(data.token);
-        videoClient.connect({ to: this.room })
-          .then(this.joinedRoom)
-          .catch(err => {
-            throw err;
-          })
+        videoClient.connect({ to: this.roomName })
+        .then(room => {
+          this.room = room;
+          room.on('participantConnected', participant => {
+            console.log(participant)
+          });
+          // subscribe to discussion changes
+          this.props.firebase.database().ref('discussion').on('value', this.updateDiscussion)
+
+          // if admin, attach to moderator circle
+          if (this.isAdmin) {
+            this.props.firebase.database().ref('discussion').set({
+              mod: this.props.user.uid
+            })
+          }
+        })
+        .catch(err => {
+          throw err;
+        })
       })
       .catch(err => {
-        this.setState({ error: 'Could not auth Twilio' });
+        return this.setState({ error: 'Could not connect' });
       });
+    });
   }
 
-  joinedRoom(room) {
-    room.localParticipant.media.attach('#local-video');
-
-    console.log('participants:', room.participants);
-    room.on('participantConnected', (participant) => {
-      participant.media.attach('#peer-video');
-      room.participants.forEach(part => console.log(part.identity));
-    })
-    room.on('participantDisconnected', (participant) => {
-      participant.media.detach();
-    })
-
-    room.on('disconnected', () => {
-      room.localParticipant.media.detach();
-    })
+  updateDiscussion(snapshot) {
+    let discussion = snapshot.val(),
+        participants;
+    if (discussion.mod !== this.state.mod) {
+      participants = this.room.participants;
+      for (let i = 0; i < participants.length; i++) {
+        if (participants[i].identity === dicussion.mod) {
+          participant[i].attach('#moderator');
+          this.setState({ mod: discussion.mod});
+          break
+        }
+      }
+    }
   }
+
+    // else {  // assume local participant
+    //   room.localParticipant.media.attach('#participant-one');
+    // }
+    //
+    // room.on('participantConnected', (participant) => {
+    //   participant.media.attach('#participant-two');
+    //   room.participants.forEach(part => console.log(part.identity));
+    // })
+    // room.on('participantDisconnected', (participant) => {
+    //   participant.media.detach();
+    // })
+    //
+    // room.on('disconnected', () => {
+    //   room.localParticipant.media.detach();
+    // })
+
+  // chooseParticipantOne() {
+  //   console.log('part1')
+  // }
+  //
+  // chooseParticipantTwo() {
+  //   console.log('part2')
+  // }
 
   componentWillUnmount() {
-    if (this.state.activeRoom) {
-      this.state.activeRoom.disconnect();
-    }
+    this.room.disconnect();
+    firebase.database().ref('discussion').off();
   }
 
   render() {
     return (
       <div>
-        <div id="local-video"/>
-        <div id="peer-video"/>
+        <div id="participant-one"/>
+        <div id="moderator"/>
+        <div id="participant-two"/>
+        <div id="admin-console">
+
+        </div>
       </div>
     )
   }
 }
 
-    // const videoEl = document.querySelector('#video');
+const mapState = (state) => ({
+  user: state.user,  // displayName & uid
+  firebase: state.firebase
+})
 
-    // this.connection = new RTCMultiConnection('123');
-    // this.connection.session = {
-    //   audio: true,
-    //   video: true
-    // };
-    // this.connection.onstream = (e) => {
-    //   console.log('Joined!!!')
-    //   videoEl.appendChild(e.mediaElement)
-    // }
-    // this.connection.onNewSession = (session) => {
-    //   console.log('new session')
-    //   session.openOrJoin(this.connection.channel);
-    // }
-    // this.connection.connect(this.connection.channel);
+export default connect(mapState)(Home);

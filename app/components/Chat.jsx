@@ -11,7 +11,7 @@ class Chat extends Component {
   render() {
     const { messages, firebase } = this.props;
     var commentArray = Object.keys(messages).map(function (key) { return messages[key]; });
-    commentArray = commentArray.slice(commentArray.length-8);
+    commentArray = commentArray.slice(commentArray.length-8).reverse();
     console.log("M", commentArray, firebase)
 
     return (

@@ -20,6 +20,7 @@ export default class CommentForm extends Component {
       text: event.target.message.value,
       photoUrl: auth.currentUser.photoURL
     })
+    event.target.message.value = '';
   }
 
   render() {

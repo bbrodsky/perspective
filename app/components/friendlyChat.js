@@ -29,16 +29,16 @@ export function FriendlyChat() {
   this.submitImageButton = document.getElementById('submitImage');
   this.imageForm = document.getElementById('image-form');
   this.mediaCapture = document.getElementById('mediaCapture');
-  this.userPic = document.getElementById('user-pic');
-  this.userName = document.getElementById('user-name');
-  this.signInButton = document.getElementById('sign-in');
-  this.signOutButton = document.getElementById('sign-out');
+  // this.userPic = document.getElementById('user-pic');
+  // this.userName = document.getElementById('user-name');
+  // this.signInButton = document.getElementById('sign-in');
+  // this.signOutButton = document.getElementById('sign-out');
   this.signInSnackbar = document.getElementById('must-signin-snackbar');
 
   // Saves message on form submit.
   this.messageForm.addEventListener('submit', this.saveMessage.bind(this));
-  this.signOutButton.addEventListener('click', this.signOut.bind(this));
-  this.signInButton.addEventListener('click', this.signIn.bind(this));
+  // this.signOutButton.addEventListener('click', this.signOut.bind(this));
+  // this.signInButton.addEventListener('click', this.signIn.bind(this));
 
   // Toggle for the button.
   var buttonTogglingHandler = this.toggleButton.bind(this);
@@ -177,27 +177,27 @@ FriendlyChat.prototype.onAuthStateChanged = function(user) {
     var userName = user.displayName;
 
     // Set the user's profile pic and name.
-    this.userPic.style.backgroundImage = 'url(' + (profilePicUrl || '/images/profile_placeholder.png') + ')';
-    this.userName.textContent = userName;
+    // this.userPic.style.backgroundImage = 'url(' + (profilePicUrl || '/images/profile_placeholder.png') + ')';
+    // this.userName.textContent = userName;
 
     // Show user's profile and sign-out button.
-    this.userName.removeAttribute('hidden');
-    this.userPic.removeAttribute('hidden');
-    this.signOutButton.removeAttribute('hidden');
+    // this.userName.removeAttribute('hidden');
+    // this.userPic.removeAttribute('hidden');
+    // this.signOutButton.removeAttribute('hidden');
 
     // Hide sign-in button.
-    this.signInButton.setAttribute('hidden', 'true');
+    // this.signInButton.setAttribute('hidden', 'true');
 
     // We load currently existing chant messages.
     this.loadMessages();
   } else { // User is signed out!
     // Hide user's profile and sign-out button.
-    this.userName.setAttribute('hidden', 'true');
-    this.userPic.setAttribute('hidden', 'true');
-    this.signOutButton.setAttribute('hidden', 'true');
+    // this.userName.setAttribute('hidden', 'true');
+    // this.userPic.setAttribute('hidden', 'true');
+    // this.signOutButton.setAttribute('hidden', 'true');
 
     // Show sign-in button.
-    this.signInButton.removeAttribute('hidden');
+    // this.signInButton.removeAttribute('hidden');
   }
 };
 

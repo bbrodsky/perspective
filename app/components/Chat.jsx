@@ -22,15 +22,15 @@ class Chat extends Component {
       <div className="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
 
 
-  <header className="mdl-layout__header mdl-color-text--white mdl-color--light-blue-700">
-    <div className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+  {/* <header className="mdl-layout__header mdl-color-text--white mdl-color--light-blue-700">
+    <div className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid"> */}
       {/* <div className="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
         <h3><i className="material-icons">chat_bubble_outline</i> </h3>
-      </div> */}
-      <div id="user-container">
-        <div hidden id="user-pic"></div>
-        <div hidden id="user-name"></div>
-        <button hidden id="sign-out" className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+      </div>
+      <div id="user-container">*/}
+        {/* <div hidden id="user-pic"></div>
+        <div hidden id="user-name"></div> */}
+        {/* <button hidden id="sign-out" className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
           Sign-out
         </button>
         <button hidden id="sign-in" className="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
@@ -38,7 +38,7 @@ class Chat extends Component {
         </button>
       </div>
     </div>
-  </header>
+  </header>*/}
 
   <main className="mdl-layout__content mdl-color--grey-100">
     <div id="messages-card-container" className="mdl-cell mdl-cell--12-col mdl-grid">
@@ -74,7 +74,7 @@ class Chat extends Component {
 
     </div>
   </main>
-</div>
+ </div>
 </div>
     )
   }

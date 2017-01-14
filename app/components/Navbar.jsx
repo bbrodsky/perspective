@@ -33,7 +33,7 @@ class Navbar extends Component {
 
     return (
       <div id="navbar">
-        <h1>NAVBAR BOSS</h1>
+        <p>Perspective</p>
         {user.displayName ?
           <div>
             <p>you are logged in as: {user.displayName}</p>

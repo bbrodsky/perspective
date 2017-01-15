@@ -5,7 +5,7 @@
 .messages {
   font-size: 18px;
   color: black;
-  padding: 5px;
+  padding: 5px 5px 10px 5px;
   /*text-align: center;*/
 }
 
@@ -38,6 +38,11 @@
   float: left;
 }
 
-/*.picture-button {
-  float: right;
-}*/
+.thumbs-up {
+  /*padding-top: 15px;*/
+  padding-right: 15px;
+}
+
+.score-counter {
+  margin: 4px 0px 0px 0px;
+}

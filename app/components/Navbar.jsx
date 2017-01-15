@@ -71,7 +71,8 @@ class AppBarExampleComposition extends Component {
     return (
       <div>
         <AppBar
-          title="Perspective"
+          title={<span><img src="public/logo.png"/>    <span className="main-title">Perspective</span></span>}
+          iconElementLeft={<span></span>}
           iconElementRight={user.displayName ?
             userTab
             :

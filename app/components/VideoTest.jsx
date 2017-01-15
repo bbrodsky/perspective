@@ -1,88 +1,169 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import axios from 'axios';
 import TwilioVideo from '../../node_modules/twilio-video/dist/twilio-video.min.js';
 
-export default class Home extends Component {
+class Home extends Component {
   constructor(props) {
     super(props);
-    this.room = '123';
+    this.roomName = props.params.splat;
+    this.room;
     this.state = {
-      identity: '',
-      activeRoom: '',
+      leftParticipant: '',
+      rightParticipant: '',
+      mod: '',
+      viewers: [],
+      isAdmin: false,
       error: ''
-    }
+    };
+    this.updateDiscussion = this.updateDiscussion.bind(this);
+    this.onNominate = this.onNominate.bind(this);
+    this.modNominate = this.modNominate.bind(this);
   }
 
   componentDidMount() {
     // Check for WebRTC on browser
     if (!navigator.webkitGetUserMedia && !navigator.mozGetUserMedia) {
-      this.setState({ error: 'Your browser does not support live video' });
+      return this.setState({ error: 'Your browser does not support live video' });
     }
 
-    // Get Twilio token
-    axios.get('/api/twilio/token')
-      .then(({ data }) => {
-        const identity = data.identity;
+    // Connect the user's socket for possible invites in future
+    this.socket = io.connect();
+    this.socket.emit('userEnter', { room: this.roomName });
+    this.socket.on('nominated', this.onNominate);
 
+    // Admins WhiteList
+    this.props.firebase.database().ref('admin').once('value', snapshot => {
+      // check if user is administrator
+      const admins = snapshot && snapshot.val();
+      const isAdmin = admins[this.props.user.uid] ? true : false
+
+      if (isAdmin) {
+        this.setState({ isAdmin: true })
+      }
+      // Get Twilio token
+      axios.get(`/api/twilio/token?userid=${this.props.user.uid}`)
+      .then(({ data }) => {
         // Connect user video to Twilio
         const videoClient = new TwilioVideo.Client(data.token);
-        videoClient.connect({ to: this.room })
-          .then(this.joinedRoom)
-          .catch(err => {
-            throw err;
-          })
+        videoClient.connect({ to: this.roomName })
+        .then(room => {
+          this.room = room;
+
+          // subscribe to discussion changes
+          this.props.firebase.database().ref('discussion').on('value', this.updateDiscussion)
+
+          // if admin, attach to moderator circle
+          if (isAdmin) {
+            this.room.localParticipant.media.attach('#moderator');
+            this.props.firebase.database().ref('discussion').set({
+              mod: this.props.user.uid,
+              leftParticipant: '',
+              rightParticipant: '',
+              viewers: [ this.props.user.uid ],
+              topic: ''
+            })
+          }
+        })
+        .catch(err => {
+          throw err;
+        })
       })
       .catch(err => {
-        this.setState({ error: 'Could not auth Twilio' });
+        return this.setState({ error: 'Could not connect' });
       });
+    });
   }
 
-  joinedRoom(room) {
-    room.localParticipant.media.attach('#local-video');
+  // Triggered when discussion in Firebase is updated
+  updateDiscussion(snapshot) {
+    const discussion = snapshot.val();
+    console.log('updated:', discussion)
 
-    console.log('participants:', room.participants);
-    room.on('participantConnected', (participant) => {
-      participant.media.attach('#peer-video');
-      room.participants.forEach(part => console.log(part.identity));
-    })
-    room.on('participantDisconnected', (participant) => {
-      participant.media.detach();
-    })
+    // If person has changed, attach new person to view
+    const personChange = (role, div) => {
+      if (discussion[role] !== this.state[role]) {
+        const partIter = this.room.participants.entries();
+        let curPart = partIter.next();
+        while (!curPart.done) {
+          if (curPart.value[1].identity === discussion[role]) {
+            console.log(curPart.value[1])
+            curPart.value[1].media.attach(`#${div}`);
+            let newState = {};
+            newState[role] = discussion[role];
+            this.setState(newState);
+            break;
+          }
+          curPart = partIter.next();
+        }
+      }
+    }
 
-    room.on('disconnected', () => {
-      room.localParticipant.media.detach();
-    })
+    // Check for person updates
+    personChange('mod', 'moderator');
+    personChange('rightParticipant', 'right-participant');
+    personChange('leftParticipant', 'left-participant');
   }
+
+  modNominate(uid, side) {
+    this.socket.emit('nominate', { room: this.roomName, side: 'left', uid })
+  }
+
+  // Handle socket notification that new discussion participant was nominated
+  onNominate({ uid, side }) {
+    console.log('on nominate received')
+    // If current user was nominated, attach media and dispatch Firebase update
+    if (uid === this.props.user.uid) {
+      this.room.localParticipant.media.attach(`#${side}-participant`);
+      let newDiscussion = {};
+      newDiscussion[`${side}Participant`] = this.props.user.uid;
+      this.props.firebase.database().ref('discussion').update(newDiscussion);
+    }
+  }
+
+    // else {  // assume local participant
+    //   room.localParticipant.media.attach('#participant-one');
+    // }
+    //
+    // room.on('participantConnected', (participant) => {
+    //   participant.media.attach('#participant-two');
+    //   room.participants.forEach(part => console.log(part.identity));
+    // })
+    // room.on('participantDisconnected', (participant) => {
+    //   participant.media.detach();
+    // })
+    //
+    // room.on('disconnected', () => {
+    //   room.localParticipant.media.detach();
+    // })
 
   componentWillUnmount() {
-    if (this.state.activeRoom) {
-      this.state.activeRoom.disconnect();
-    }
+    this.room.disconnect();
+    firebase.database().ref('discussion').off();
+    this.socket.emit('userLeave', { room: this.roomName });
   }
 
   render() {
     return (
       <div>
-        <div id="local-video"/>
-        <div id="peer-video"/>
+      { // Display possible error with WebRTC or Twilio
+        this.state.error ?
+          <p>{ this.state.error }</p> : null
+      }
+        <div id="left-participant"/>
+        <div id="moderator"/>
+        <div id="right-participant"/>
+        <div id="admin-console">
+        <button id="nominate" onClick={ () => this.modNominate('BAFxkHMbgTUwKQtWimEyR6ftly92') }>Nominate</button>
+        </div>
       </div>
     )
   }
 }
 
-    // const videoEl = document.querySelector('#video');
+const mapState = (state) => ({
+  user: state.user,  // displayName & uid
+  firebase: state.firebase
+})
 
-    // this.connection = new RTCMultiConnection('123');
-    // this.connection.session = {
-    //   audio: true,
-    //   video: true
-    // };
-    // this.connection.onstream = (e) => {
-    //   console.log('Joined!!!')
-    //   videoEl.appendChild(e.mediaElement)
-    // }
-    // this.connection.onNewSession = (session) => {
-    //   console.log('new session')
-    //   session.openOrJoin(this.connection.channel);
-    // }
-    // this.connection.connect(this.connection.channel);
+export default connect(mapState)(Home);

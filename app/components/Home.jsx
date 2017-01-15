@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Chat from './Chat'
+import Databox from './Databox'
 
 
 
@@ -37,6 +38,7 @@ class Home extends Component {
         <h1> flying links section</h1>
       </div>
       <Chat />
+      <Databox issue={"guns"} />
     </div>
 
     )

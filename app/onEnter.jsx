@@ -15,7 +15,6 @@ var config = {
 firebase.initializeApp(config);
 
 export const onAppEnter = () => {
-  firebase.database().ref("TEST").set("STRING")
   store.dispatch(setFirebase(firebase))
 
   firebase.database().ref('messages').on('value', snapshot => {

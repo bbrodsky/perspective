@@ -10,7 +10,13 @@ class Chat extends Component {
 
   render() {
     const { messages, firebase } = this.props;
-    var commentArray = Object.keys(messages).map(function (key) { return messages[key]; });
+
+    var commentArray = Object.keys(messages).map(function (key) {
+      let msg = messages[key];
+      msg.id = key
+      return msg;
+    });
+
     commentArray = commentArray.slice(commentArray.length-8).reverse();
     console.log("M", commentArray, firebase)
 
@@ -23,7 +29,7 @@ class Chat extends Component {
         <div className="row">
           {commentArray.length && commentArray.map((comment, index) => {
             return (
-              <Comment key={index} messageText={comment.text} userName={comment.name}/>
+              <Comment key={index} firebase={firebase} message={comment} userName={comment.name} />
             )
           })}
           </div>

@@ -4,9 +4,6 @@ import { connect } from 'react-redux';
 export default class CommentForm extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      firebase: null
-    }
     this.submitComment.bind(this)
   }
 

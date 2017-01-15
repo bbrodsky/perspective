@@ -24,7 +24,8 @@ export default class Comment extends Component {
     const buttonStyle = {paddingTop: '20px'}
     const iconStyle = {fontSize: '30px'};
     return (
-      <div className="messages-card mdl-card mdl-shadow--2dp col-md-4">
+    <div className="row">
+      <div className="messages-card mdl-card mdl-shadow--2dp col-md-12">
         <div className="mdl-card__supporting-text">
           <div className="userName">
             { userName }:
@@ -37,6 +38,7 @@ export default class Comment extends Component {
           <p>Score: {score}</p>
         </div>
       </div>
+    </div>
     )
   }
 }

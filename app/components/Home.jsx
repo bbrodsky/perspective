@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Chat from './Chat'
 
 
 
@@ -9,20 +10,40 @@ class Home extends Component {
   }
 
   render() {
-    const { firebase } = this.props
+    const { user } = this.props
 
     return (
-      <div>
-        <h2>Template Ready.</h2>
-        <p>Add new pages using react-router, change the Redux state, and make this app your own!</p>
-        <p>CURRENT STATE: TBD</p>
-        <button onClick={() => firebase.database().ref("User").set("Comment")}>Comment</button>
+    <div className="container">
+      <div className="row">
+        <div className="col-md-6">
+          <div className="vbox"></div>
+        </div>
+        <div className="col-md-6">
+          <div className="vbox"></div>
+        </div>
       </div>
+        {user && user.displayName ?
+        <div className="row">
+          <div className="col-md-6">
+            <p>you are logged in as: {user.displayName}</p>
+          </div>
+          <div className="col-md-6">
+            <img className="swag" src={user.photoURL} />
+          </div>
+        </div>
+        :
+        <p>You are not logged in</p>}
+      <div className="row">
+        <h1> flying links section</h1>
+      </div>
+      <Chat />
+    </div>
+
     )
   }
 }
 
-const mapStateToProps = ({ firebase }) => ({ firebase })
+const mapStateToProps = ({ user }) => ({ user })
 
 
 

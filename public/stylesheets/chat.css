@@ -19,7 +19,8 @@
   width: 100%;
 }
 
-#message-form {
+#messages-card {
+  margin: 0px;
 }
 
 #message-form input {

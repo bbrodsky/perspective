@@ -8,12 +8,10 @@ import FlipMove from 'react-flip-move';
 class Chat extends Component {
   constructor(props) {
     super(props);
-    this.renderRecentComments = this.renderRecentComments.bind(this);
-    this.renderTopComments = this.renderTopComments.bind(this);
   }
 
   renderRecentComments(){
-    const { messages, firebase} = this.props;
+    const { messages, firebase } = this.props;
     var commentArray = Object.keys(messages).map(function (key) {
       let msg = messages[key];
       msg.id = key
@@ -23,8 +21,8 @@ class Chat extends Component {
     commentArray = commentArray.slice(commentArray.length-6).reverse();
 
     if (!commentArray) return;
-    return commentArray.map((comment, index) => (
-        <Comment key={index} firebase={firebase} message={comment} userName={comment.name} />
+    return commentArray.map(comment => (
+          <Comment key={comment.id} firebase={firebase} message={comment} userName={comment.name} />
       )
     )
   }
@@ -38,22 +36,15 @@ class Chat extends Component {
     });
     let topRated = topCommentArray.sort((a, b) => b.score - a.score).slice(0,6);
 
-    return <TopComments comments={topRated} firebase={firebase}/>
+    if (!topRated) return;
+
+    return topRated.map(comment => (
+            <Comment key={comment.id} firebase={firebase} message={comment} userName={comment.name} />
+        ))
   }
 
   render() {
     const { firebase } = this.props;
-    //
-    // var commentArray = Object.keys(messages).map(function (key) {
-    //   let msg = messages[key];
-    //   msg.id = key
-    //   return msg;
-    // });
-    //
-    // let duplicate = Object.assign([], commentArray)
-    // let topRated = duplicate.sort((a, b) => b.score - a.score).slice(0,6)
-    //
-    // commentArray = commentArray.slice(commentArray.length-6).reverse();
 
     return (
     <div className="row">
@@ -63,21 +54,16 @@ class Chat extends Component {
         </div>
         <div className="row">
           <div className="col-md-6">
-            {/* <TopComments comments={topRated} firebase={firebase}/> */}
-            <FlipMove easing="ease" style={{width: '100%'}}>
+            <h4>Top Comments</h4>
+            <FlipMove easing="ease">
               { this.renderTopComments() }
             </FlipMove>
           </div>
           <div className="col-md-6">
-          <h4>Recent Comments</h4>
-          <FlipMove easing="ease" style={{width: '100%'}}>
-            { this.renderRecentComments() }
-          </FlipMove>
-          {/* {commentArray.length && commentArray.map((comment, index) => {
-            return (
-              <Comment key={index} firebase={firebase} message={comment} userName={comment.name} />
-            )
-          })} */}
+            <h4>Recent Comments</h4>
+            <FlipMove easing="ease">
+              { this.renderRecentComments() }
+            </FlipMove>
           </div>
         </div>
       </div>

@@ -40,7 +40,7 @@ export default class Comment extends Component {
             { text }
           </div>
           <span className="thumbs-up"><ThumbsUp onTouchTap={() => this.upVote(id, score)} hoverColor={green500} /></span>
-          <span classNAme="thumbs-down"><ThumbsDown onTouchTap={() => this.downVote(id, score)} hoverColor={red500} /></span>
+          <span className="thumbs-down"><ThumbsDown onTouchTap={() => this.downVote(id, score)} hoverColor={red500} /></span>
           {/* <IconButton style={buttonStyle} iconStyle={iconStyle} iconClassName="zmdi zmdi-thumb-up zmdi-hc-3x" color={greenA200} onTouchTap={() => this.upVote(id, score)} />
           <IconButton style={buttonStyle} iconStyle={iconStyle} iconClassName="zmdi zmdi-thumb-down zmdi-hc-3x" onTouchTap={() => this.downVote(id, score)} /> */}
           <p className="score-counter">Score: {score}</p>

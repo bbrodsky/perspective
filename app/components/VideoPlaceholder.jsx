@@ -37,9 +37,9 @@ class Video extends Component {
 
     // get current viewers from database
     firebase.database().ref('discussion').once('value', snapshot => {
-      const mod = snapshot && snapshot.val().mod;
-      const rightParticipant = snapshot && snapshot.val().rightParticipant;
-      const leftParticipant = snapshot && snapshot.val().leftParticipant;
+      const mod = snapshot && snapshot.val().mod || '';
+      const rightParticipant = snapshot && snapshot.val().rightParticipant || '';
+      const leftParticipant = snapshot && snapshot.val().leftParticipant || '';
       const viewers = snapshot && snapshot.val().viewers;
       // then make updates to viewers & appropriate other prop on discussion object
       // if admin, attach to moderator circle
@@ -76,7 +76,7 @@ class Video extends Component {
 
   }
 
-  attachRemotes(room) {
+  attachRemotes(room, mod, rightParticipant, leftParticipant) {
     room.on('participantConnected', participant => {
       if (!rightParticipant) {
         participant.media.attach('#right-participant');

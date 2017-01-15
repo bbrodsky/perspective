@@ -10,7 +10,7 @@ class Chat extends Component {
   }
 
   render() {
-    const { messages, firebase } = this.props;
+    const { messages, firebase, user } = this.props;
 
     var commentArray = Object.keys(messages).map(function (key) {
       let msg = messages[key];
@@ -27,7 +27,7 @@ class Chat extends Component {
     <div className="row">
       <div className="col-sm-12">
         <div className="row">
-          {firebase ? <CommentForm firebase={firebase}/> : null}
+          {firebase && user.displayName ? <CommentForm firebase={firebase}/> : null}
         </div>
         <div className="row">
           <div className="col-md-6">
@@ -48,6 +48,6 @@ class Chat extends Component {
   }
 }
 
-const mapStateToProps = ({ firebase, messages }) => ({ firebase, messages })
+const mapStateToProps = ({ firebase, messages, user }) => ({ firebase, messages, user })
 
 export default connect(mapStateToProps, null)(Chat);

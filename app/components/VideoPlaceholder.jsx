@@ -116,17 +116,17 @@ class Video extends Component {
       <div>
         <Paper style={ participantStyle } zDepth={1} rounded={true} id="left-participant">
           <iframe title="YouTube video player" className="youtube-player" type="text/html"
-          width="375" height="275" src="https://www.youtube.com/embed/friDxj-9euI?autoplay=1&rel=0&amp;controls=0&amp;showinfo=0"
+          width="375" height="275" src="https://www.youtube.com/embed/lk1yw6-zRtw?autoplay=1&rel=0&amp;controls=0&amp;showinfo=0"
           frameborder="0"></iframe>
         </Paper>
         <Paper style={ moderatorStyle } zDepth={1} rounded={true} id="moderator">
           <iframe title="YouTube video player" className="youtube-player" type="text/html"
-          width="150" height="150" src="https://www.youtube.com/embed/WlJqPK3X3E0?autoplay=1&rel=0&amp;controls=0&amp;showinfo=0"
+          width="150" height="150" src="https://www.youtube.com/embed/uo5z4Jge38M?autoplay=1&rel=0&amp;controls=0&amp;showinfo=0"
           frameborder="0"></iframe>
         </Paper>
         <Paper style={ participantStyle } zDepth={1} rounded={true} id="right-participant">
           <iframe title="YouTube video player" className="youtube-player" type="text/html"
-          width="375" height="275" src="https://www.youtube.com/embed/dXkOJK3KscA?autoplay=1&rel=0&amp;controls=0&amp;showinfo=0"
+          width="375" height="275" src="https://www.youtube.com/embed/nG3aJf7O6EM?autoplay=1&rel=0&amp;controls=0&amp;showinfo=0"
           frameborder="0"></iframe>
         </Paper>
       </div>

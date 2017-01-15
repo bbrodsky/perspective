@@ -18,7 +18,8 @@ export default class CommentForm extends Component {
     firebase.database().ref('messages').push({
       name: auth.currentUser.displayName,
       text: event.target.message.value,
-      photoUrl: auth.currentUser.photoURL
+      photoUrl: auth.currentUser.photoURL,
+      score: 0
     })
     event.target.message.value = '';
   }

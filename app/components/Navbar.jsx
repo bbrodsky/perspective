@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import AppBar from 'material-ui/AppBar';
+import Avatar from 'material-ui/Avatar';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
@@ -53,58 +54,34 @@ class AppBarExampleComposition extends Component {
     firebase.auth().signOut()
   }
 
-
   render() {
+
+    const { user } = this.props
+    const userTabStyle = { padding: "10px", color: "white" }
+    const loginElementStyle = { paddingTop: "5px", paddingBottom: "5px" }
+    const userTab = (
+        <div style={ loginElementStyle }>
+          <Avatar src= { user.photoURL } />
+          <span style={ userTabStyle }>Welcome, {user.displayName}</span>
+          <Logged signOut={this.signOut} />
+        </div>
+    )
+
+
     return (
       <div>
         <AppBar
           title="Perspective"
-          iconElementRight={this.props.user.displayName ?
-            <Logged signOut={this.signOut} />
+          iconElementRight={user.displayName ?
+            userTab
             :
             <Login signInGoog={this.signInGoog} />
-          }
-        />
+          }/>
       </div>
     );
   }
 }
+
 const mapStateToProps = ({ firebase, user }) => ({ firebase, user })
 
 export default connect(mapStateToProps)(AppBarExampleComposition);
-
-// import React, { Component } from 'react';
-// import { connect } from 'react-redux';
-// import AppBar from 'material-ui/AppBar';
-
-
-
-// class Navbar extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.signInFB = this.signInFB.bind(this)
-//     this.signInGoog = this.signInGoog.bind(this)
-//     this.signOut = this.signOut.bind(this)
-//   }
-
-//   signInFB() {
-//     const { firebase } = this.props
-//     let provider = new firebase.auth.FacebookAuthProvider();
-//     firebase.auth().signInWithPopup(provider)
-//     .catch(console.error);
-//   }
-
-
-
-// <div id="navbar">
-//   <p>Perspective</p>
-//   {user.displayName ?
-//     <div>
-//       <p>you are logged in as: {user.displayName}</p>
-//       <button onClick={this.signOut}>log out bro</button>
-//       <img className="swag" src={user.photoURL} />
-//     </div>
-//     :
-//     <button onClick={this.signInGoog}>log in bro</button>}
-
-// </div>

@@ -57,7 +57,7 @@ export default class CommentForm extends Component {
                 col-md-6">
 
                 <input className="mdl-textfield__input" type="text" id="message" />
-                <label className="mdl-textfield__label" htmlFor="message">I am intersted in....</label>
+                <label className="mdl-textfield__label" htmlFor="message">I am interested in....</label>
               </div>
             </div>
             <div className="row">

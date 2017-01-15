@@ -24,14 +24,16 @@ class Databox extends Component {
 
     return (
         <div className="row">
+        <ul>
           {Object.keys(databox).length && Object.keys(databox).map((linkId) => {
             return (
-              <div>
+              <li>
                 <a href={databox[linkId].link}>{databox[linkId].description}</a>
-              </div>
+              </li>
             )
 
           })}
+        </ul>
         </div>
     )
   }

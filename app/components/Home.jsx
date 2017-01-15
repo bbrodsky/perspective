@@ -36,9 +36,9 @@ class Home extends Component {
         <p>You are not logged in</p>}
       <div className="row">
         <h1> flying links section</h1>
+        <Databox issue={"guns"} />
       </div>
       <Chat />
-      <Databox issue={"guns"} />
     </div>
 
     )

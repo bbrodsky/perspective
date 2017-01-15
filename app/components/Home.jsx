@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Chat from './Chat'
-
+import Video from './VideoPlaceholder'
 
 
 class Home extends Component {
@@ -14,14 +14,7 @@ class Home extends Component {
 
     return (
     <div className="container">
-      <div className="row">
-        <div className="col-md-6">
-          <div className="vbox"></div>
-        </div>
-        <div className="col-md-6">
-          <div className="vbox"></div>
-        </div>
-      </div>
+      <Video />
       <Chat />
     </div>
 

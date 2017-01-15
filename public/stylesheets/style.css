@@ -30,3 +30,18 @@ body {
   min-width: 1000px;
   background-color: #FAFCFF;
 }
+
+#moderator video {
+  height: 150px !important;
+  width: 150px !important;
+}
+
+#right-participant video {
+  height: 275px !important;
+  width: 375px !important;
+}
+
+#left-participant video {
+  height: 275px !important;
+  width: 375px !important;
+}

@@ -8,9 +8,6 @@ class Video extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      leftParticipant: '',
-      rightParticipant: '',
-      admin: '',
       viewers: []
     };
 
@@ -38,89 +35,78 @@ class Video extends Component {
     const userid = this.props.user.uid;
     const firebase = this.props.firebase;
 
-    // subscribe to discussion changes
-    firebase.database().ref('discussion').on('value', this.updateDiscussion)
-
     // get current viewers from database
-    firebase.database().ref('discussion').child('viewers').once('value', snapshot => {
-      const viewers = snapshot && snapshot.val();
+    firebase.database().ref('discussion').once('value', snapshot => {
+      const mod = snapshot && snapshot.val().mod;
+      const rightParticipant = snapshot && snapshot.val().rightParticipant;
+      const leftParticipant = snapshot && snapshot.val().leftParticipant;
+      const viewers = snapshot && snapshot.val().viewers;
       // then make updates to viewers & appropriate other prop on discussion object
       // if admin, attach to moderator circle
-      if (!this.state.admin) {
+      if (!mod) {
         room.localParticipant.media.attach('#moderator');
         firebase.database().ref('discussion').update({
-          admin: userid,
+          mod: userid,
           viewers: [ ...viewers, userid ],
         })
-        this.setState({ admin: userid });
       }
       // else, check if left participant
-      else if (!this.state.leftParticipant) {
+      else if (!leftParticipant) {
         room.localParticipant.media.attach('#left-participant');
         firebase.database().ref('discussion').update({
           leftParticipant: userid,
           viewers: [ ...viewers, userid ],
         })
-        this.setState({ leftParticipant: userid })
       }
       // else, check right
-      else if (!this.state.rightParticipant) {
+      else if (!rightParticipant) {
         room.localParticipant.media.attach('#right-participant');
 
         firebase.database().ref('discussion').update({
           rightParticipant: userid,
           viewers: [ ...viewers, userid ],
         })
-        this.setState({ rightParticipant: userid })
       } else {
         firebase.database().ref('discussion').update({
           viewers: [ ...viewers, userid ]
         })
       }
+    return this.attachRemotes(room, mod, rightParticipant, leftParticipant);
     })
 
-    return this.attachRemotes(room);
   }
 
   attachRemotes(room) {
-    const firebase = this.props.firebase;
-
-    firebase.database().ref('discussion').once('value', snapshot => {
-      const rightParticipant = snapshot.val().rightParticipant;
-      const leftParticipant = snapshot.val().leftParticipant;
-      const moderator = snapshot.val().leftParticipant;
-
-      room.participants.forEach(participant => {
-        if (participant.identity === rightParticipant) {
-          participant.media.attach('#rightParticipant');
-        }
-        else if (participant.identity === leftParticipant) {
-          participant,media.attach('#leftParticipant');
-        }
-        else if (participant.identity === moderator) {
-          participant.media.attach('#moderator');
-        }
-      })
+    room.on('participantConnected', participant => {
+      if (!rightParticipant) {
+        participant.media.attach('#right-participant');
+        console.log('setting right participant')
+      }
+      else if (!leftParticipant) {
+        participant,media.attach('#left-participant');
+        console.log('setting left participant')
+      }
+      else if (!moderator) {
+        participant.media.attach('#moderator');
+        console.log('setting moderator')
+      }
     })
-    return this.setState( {
-      rightParticipant, leftParticipant, moderator
-    });
   }
 
   render() {
 
     const participantStyle = {
-      height: '275',
-      width: '375',
-      margin: '20',
+      height: '275px',
+      width: '375px',
+      margin: '20px',
       textAlign: 'center',
       display: 'inline-block',
       backgroundColor: 'black'
     };
     const moderatorStyle = {
-      height: '150',
-      width: '150',
-      margin: '20',
+      height: '150px',
+      width: '160px',
+      margin: '10px',
       textAlign: 'center',
       display: 'inline-block',
       backgroundColor: 'black'
@@ -130,12 +116,12 @@ class Video extends Component {
     // }
 
     return (
-      <div class="video-component">
-        <Paper style={ participantStyle } zDepth={1} rounded={false} id="left-participant">
+      <div>
+        <Paper style={ participantStyle } zDepth={1} rounded={true} id="left-participant">
           {/*<span style={ vidTextStyle }></span>*/}
         </Paper>
-        <Paper style={ moderatorStyle } zDepth={1} circle={true} id="moderator"/>
-        <Paper style={ participantStyle } zDepth={1} rounded={false} id="right-participant">
+        <Paper style={ moderatorStyle } zDepth={1} rounded={true} id="moderator"/>
+        <Paper style={ participantStyle } zDepth={1} rounded={true} id="right-participant">
           {/*<span style={ vidTextStyle }></span>*/}
         </Paper>
       </div>

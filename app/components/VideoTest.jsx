@@ -42,15 +42,20 @@ class Home extends Component {
         .then(room => {
           this.room = room;
           room.on('participantConnected', participant => {
-            console.log(participant)
+            console.log('new participant')
           });
           // subscribe to discussion changes
           this.props.firebase.database().ref('discussion').on('value', this.updateDiscussion)
 
           // if admin, attach to moderator circle
-          if (this.isAdmin) {
+          if (isAdmin) {
+            this.room.localParticipant.media.attach('#moderator');
             this.props.firebase.database().ref('discussion').set({
-              mod: this.props.user.uid
+              mod: this.props.user.uid,
+              participantOne: '',
+              participantTwo: '',
+              viewers: [ this.props.user.uid ],
+              topic: ''
             })
           }
         })
@@ -65,18 +70,24 @@ class Home extends Component {
   }
 
   updateDiscussion(snapshot) {
-    let discussion = snapshot.val(),
-        participants;
+    const discussion = snapshot.val();
+    console.log(discussion)
+
+    // If moderator changed, attach new mod to view
     if (discussion.mod !== this.state.mod) {
-      participants = this.room.participants;
-      for (let i = 0; i < participants.length; i++) {
-        if (participants[i].identity === dicussion.mod) {
-          participant[i].attach('#moderator');
+      const partIter = this.room.participants.entries();
+      let curPart = partIter.next();
+      while (!curPart.done) {
+        if (curPart.value[1].identity === discussion.mod) {
+          curPart.value[1].media.attach('#moderator');
           this.setState({ mod: discussion.mod});
-          break
+          break;
         }
+        curPart = partIter.next();
       }
     }
+
+    // If participants changed, update 
   }
 
     // else {  // assume local participant
@@ -111,6 +122,10 @@ class Home extends Component {
   render() {
     return (
       <div>
+      {
+        this.state.error ?
+          <p>Browser does not support getUserMedia. Please use Chrome.</p> : null
+      }
         <div id="participant-one"/>
         <div id="moderator"/>
         <div id="participant-two"/>

@@ -9,14 +9,16 @@ class Home extends Component {
     this.roomName = props.params.splat;
     this.room;
     this.state = {
-      participantOne: '',
-      participantTwo: '',
+      leftParticipant: '',
+      rightParticipant: '',
       mod: '',
       viewers: [],
       isAdmin: false,
       error: ''
     };
     this.updateDiscussion = this.updateDiscussion.bind(this);
+    this.onNominate = this.onNominate.bind(this);
+    this.modNominate = this.modNominate.bind(this);
   }
 
   componentDidMount() {
@@ -24,6 +26,12 @@ class Home extends Component {
     if (!navigator.webkitGetUserMedia && !navigator.mozGetUserMedia) {
       return this.setState({ error: 'Your browser does not support live video' });
     }
+
+    // Connect the user's socket for possible invites in future
+    this.socket = io.connect();
+    this.socket.emit('userEnter', { room: this.roomName });
+    this.socket.on('nominated', this.onNominate);
+
     // Admins WhiteList
     this.props.firebase.database().ref('admin').once('value', snapshot => {
       // check if user is administrator
@@ -41,9 +49,7 @@ class Home extends Component {
         videoClient.connect({ to: this.roomName })
         .then(room => {
           this.room = room;
-          room.on('participantConnected', participant => {
-            console.log('new participant')
-          });
+
           // subscribe to discussion changes
           this.props.firebase.database().ref('discussion').on('value', this.updateDiscussion)
 
@@ -52,8 +58,8 @@ class Home extends Component {
             this.room.localParticipant.media.attach('#moderator');
             this.props.firebase.database().ref('discussion').set({
               mod: this.props.user.uid,
-              participantOne: '',
-              participantTwo: '',
+              leftParticipant: '',
+              rightParticipant: '',
               viewers: [ this.props.user.uid ],
               topic: ''
             })
@@ -69,25 +75,50 @@ class Home extends Component {
     });
   }
 
+  // Triggered when discussion in Firebase is updated
   updateDiscussion(snapshot) {
     const discussion = snapshot.val();
-    console.log(discussion)
+    console.log('updated:', discussion)
 
-    // If moderator changed, attach new mod to view
-    if (discussion.mod !== this.state.mod) {
-      const partIter = this.room.participants.entries();
-      let curPart = partIter.next();
-      while (!curPart.done) {
-        if (curPart.value[1].identity === discussion.mod) {
-          curPart.value[1].media.attach('#moderator');
-          this.setState({ mod: discussion.mod});
-          break;
+    // If person has changed, attach new person to view
+    const personChange = (role, div) => {
+      if (discussion[role] !== this.state[role]) {
+        const partIter = this.room.participants.entries();
+        let curPart = partIter.next();
+        while (!curPart.done) {
+          if (curPart.value[1].identity === discussion[role]) {
+            console.log(curPart.value[1])
+            curPart.value[1].media.attach(`#${div}`);
+            let newState = {};
+            newState[role] = discussion[role];
+            this.setState(newState);
+            break;
+          }
+          curPart = partIter.next();
         }
-        curPart = partIter.next();
       }
     }
 
-    // If participants changed, update 
+    // Check for person updates
+    personChange('mod', 'moderator');
+    personChange('rightParticipant', 'right-participant');
+    personChange('leftParticipant', 'left-participant');
+  }
+
+  modNominate(uid, side) {
+    this.socket.emit('nominate', { room: this.roomName, side: 'left', uid })
+  }
+
+  // Handle socket notification that new discussion participant was nominated
+  onNominate({ uid, side }) {
+    console.log('on nominate received')
+    // If current user was nominated, attach media and dispatch Firebase update
+    if (uid === this.props.user.uid) {
+      this.room.localParticipant.media.attach(`#${side}-participant`);
+      let newDiscussion = {};
+      newDiscussion[`${side}Participant`] = this.props.user.uid;
+      this.props.firebase.database().ref('discussion').update(newDiscussion);
+    }
   }
 
     // else {  // assume local participant
@@ -106,31 +137,24 @@ class Home extends Component {
     //   room.localParticipant.media.detach();
     // })
 
-  // chooseParticipantOne() {
-  //   console.log('part1')
-  // }
-  //
-  // chooseParticipantTwo() {
-  //   console.log('part2')
-  // }
-
   componentWillUnmount() {
     this.room.disconnect();
     firebase.database().ref('discussion').off();
+    this.socket.emit('userLeave', { room: this.roomName });
   }
 
   render() {
     return (
       <div>
-      {
+      { // Display possible error with WebRTC or Twilio
         this.state.error ?
-          <p>Browser does not support getUserMedia. Please use Chrome.</p> : null
+          <p>{ this.state.error }</p> : null
       }
-        <div id="participant-one"/>
+        <div id="left-participant"/>
         <div id="moderator"/>
-        <div id="participant-two"/>
+        <div id="right-participant"/>
         <div id="admin-console">
-
+        <button id="nominate" onClick={ () => this.modNominate('BAFxkHMbgTUwKQtWimEyR6ftly92') }>Nominate</button>
         </div>
       </div>
     )

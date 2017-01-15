@@ -9,15 +9,16 @@ import Discussion from './components/VideoTest'
 
 import {setFirebase} from './reducers/firebase'
 import store from './store'
+import Landing from './components/landing'
 
 import {onAppEnter} from './onEnter'
 
 export default () => (
   <Router history={browserHistory}>
     <Route path="/" component={App} onEnter={onAppEnter}>
-      <IndexRedirect to="/home" />
+      <IndexRedirect to="/landing" />
       <Route path="/home" component={Home} />
-      <Route path="/chat" component={Chat} />
+      <Route path="/landing" component={Landing} />
       <Route path="/discussion/*" component={Discussion} />
     </Route>
   </Router>

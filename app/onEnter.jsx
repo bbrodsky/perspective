@@ -3,6 +3,7 @@ import {setFirebase} from './reducers/firebase'
 import store from './store'
 import { setUser, clearUser } from './reducers/user'
 import {setMessages} from './reducers/messages'
+import {browserHistory} from 'react-router'
 
 var config = {
   apiKey: "AIzaSyDpkgcycwuu4PvgDf-thm8tmkyH1V6OF-o",
@@ -26,9 +27,11 @@ export const onAppEnter = () => {
   firebase.auth().onAuthStateChanged(user => {
     if (!user) { // if not authenticated, send to login
       store.dispatch(clearUser());
+      browserHistory.push('/landing')
     }
     else { // otherwise, set user on store
       store.dispatch(setUser(user));
+      browserHistory.push('/home')
     }
   });
 }

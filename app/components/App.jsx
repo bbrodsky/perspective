@@ -6,7 +6,6 @@ const App = props => {
 
   return (
     <div>
-      <Navbar/>
         { children }
     </div>
   )

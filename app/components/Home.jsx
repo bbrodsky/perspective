@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Chat from './Chat'
 import Video from './VideoPlaceholder'
+import Navbar from './Navbar'
 
 
 class Home extends Component {
@@ -13,9 +14,12 @@ class Home extends Component {
     const { user } = this.props
 
     return (
-    <div className="container">
-      <Video />
-      <Chat />
+    <div>
+    <Navbar/>
+      <div className="container">
+        <Video />
+        <Chat />
+      </div>
     </div>
 
     )
